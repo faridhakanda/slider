@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        #container {
+            display: grid;
+            grid-template-columns: auto;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            margin: auto;
+            background-color: aliceblue;
+            width: 400px;
+        }
+        #imageSlider {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        #imageContainer {
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            position: relative;
+            align-content: space-around;
+            width: 300px;
+            height: 250px;
+        }
+        #images {
+            display: flex;
+        }
+        #images img {
+            width: 300px;
+            height: 250px;
+            position: absolute;
+            opacity: 0;
+        }
+        #activeDot {
+            display: grid;
+            align-content: center;
+            gap: 10px;
+        }
+        #activeDot div {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            border: 1px solid gray;
+        }
+        #activeDot .active {
+            background-color: black;
+        }
+        #previous, #next {
+            margin: auto;
+        }
+        #previous img, #next img {
+            
+            height: 24px;
+            width: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="previous">
+            <img src="up.png" alt="previous">
+        </div>
+        <div id="imageSlider">
+            <div id="imageContainer">
+                <div id="images">
+                    <img class="img" src="1@2x.png" alt="flour">
+                    <img class="img" src="2@2x.png" alt="flour">
+                    <img class="img" src="3@2x.png" alt="flour">
+                    <img class="img" src="4@2x.png" alt="flour">
+                </div>
+            </div>
+            <div id="activeDot">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+        <div id="next">
+            <img src="down.png" alt="down">
+        </div>
+    </div>
+    <script>
+        let currentIndex = 0;
+        const images = document.querySelectorAll(".img");
+        const dots = document.querySelectorAll(".dot");
+        const totalImages = images.length;
+        images.forEach((img, index) =>{
+            gsap.set(img, { opacity: 0, y: "100%" });
+        });
+        gsap.set(images[0], { opacity: 1, y: "0%" });
+        function updateDots(index) {
+            dots.forEach(dot => dot.classList.remove("active"));
+            dots[index].classList.add("active");
+        }
+        updateDots(0);
+        function Animation() {
+            let nextIndex = (currentIndex + 1) % totalImages;
+            gsap.to(images[currentIndex], { y: "-100%", opacity: 1, duration: 0.8 });
+            gsap.fromTo(images[nextIndex], 
+                { y: "100%", opacity: 1 },
+                { y: "0%", opacity: 1, duration: 1 }
+            );
+            updateDots(nextIndex);
+            currentIndex = nextIndex;
+        }
+        setInterval(Animation, 1500);
+    </script>
+</body>
+</html>
